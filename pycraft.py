@@ -86,16 +86,16 @@ while True:
                 player.inventory[blocks[give_nm]] = give_am
             elif event.key == pygame.K_w:
                 player.position[1] -= 1
-                print(player.position)
+                print('player position:', player.position)
             elif event.key == pygame.K_s:
                 player.position[1] += 1
-                print(player.position)
+                print('player position:', player.position)
             elif event.key == pygame.K_a:
                 player.position[0] -= 1
-                print(player.position)
+                print('player position:', player.position)
             elif event.key == pygame.K_d:
                 player.position[0] += 1
-                print(player.position)
+                print('player position:', player.position)
             elif event.key == pygame.K_MINUS:
                 player.inventory[blocks['stone']] += 1
             elif event.key == pygame.K_EQUALS:
