@@ -15,3 +15,7 @@ right alt | equip block from text input
 \- | give 1 stone
 
 = | give 1 grass
+
+left control | save world
+
+left alt | load world

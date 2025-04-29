@@ -8,6 +8,14 @@ class World:
         for i in range(25):
             for j in range(40):
                 self.blocks.append([blocks['none'], j, i])
+    
+    def save(self, fp='world.pycr'):
+        with open(fp, 'w') as save_world:
+            save_world.write(f'{self.blocks}')
+        
+    def load(self, fp='world.pycr'):
+        with open(fp, 'r') as load_world:
+            self.blocks = eval(f'{load_world.read()}')
 
 class Player:
     def __init__(self):
@@ -92,6 +100,10 @@ while True:
                 player.inventory[blocks['stone']] += 1
             elif event.key == pygame.K_EQUALS:
                 player.inventory[blocks['grass']] += 1
+            elif event.key == pygame.K_LALT:
+                world.load()
+            elif event.key == pygame.K_LCTRL:
+                world.save()
 
     screen.fill((0, 0, 0))
 
