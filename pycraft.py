@@ -38,6 +38,12 @@ for i in range(81):
     else: world.blocks[960][0] = blocks['grass']
     update_blockrects()
 
+player_rect = pygame.Rect(player.position[0]*25,player.position[1]*25,25,25)
+
+def update_player_rect():
+    global player_rect
+    player_rect = pygame.Rect(player.position[0]*25,player.position[1]*25,25,25)
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -72,12 +78,17 @@ while True:
                 give_am = int(input('amount > '))
                 player.inventory[blocks[give_nm]] = give_am
             elif event.key == pygame.K_w:
-                player.position[1] += 1
-            elif event.key == pygame.K_s:
                 player.position[1] -= 1
+                print(player.position)
+            elif event.key == pygame.K_s:
+                player.position[1] += 1
+                print(player.position)
             elif event.key == pygame.K_a:
                 player.position[0] -= 1
-            elif event.key == pygame.K_d
+                print(player.position)
+            elif event.key == pygame.K_d:
+                player.position[0] += 1
+                print(player.position)
 
     screen.fill((0, 0, 0))
 
@@ -87,5 +98,8 @@ while True:
 
     for i in range(len(blockrects)):
         pygame.draw.rect(screen, world.blocks[i][0], blockrects[i])
+    
+    update_player_rect()
+    pygame.draw.rect(screen, (255, 255, 255), player_rect)
 
     pygame.display.flip()
