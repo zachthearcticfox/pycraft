@@ -52,9 +52,8 @@ while True:
         
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
-                mx, my = pygame.mouse.get_pos()
-                grid_x = mx // 25
-                grid_y = my // 25
+                grid_x = player.position[0]+1
+                grid_y = player.position[1]
 
                 if player.inventory[player.block_equipped] >= 1:
                     for block in world.blocks:
