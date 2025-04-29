@@ -88,6 +88,10 @@ while True:
             elif event.key == pygame.K_d:
                 player.position[0] += 1
                 print(player.position)
+            elif event.key == pygame.K_MINUS:
+                player.inventory[blocks['stone']] += 1
+            elif event.key == pygame.K_EQUALS:
+                player.inventory[blocks['grass']] += 1
 
     screen.fill((0, 0, 0))
 
