@@ -94,6 +94,15 @@ while True:
     update_blockrects()
 
     clock.tick(60)
+    
+    if player.position[0] < 0: 
+        player.position[0] = 39
+    if player.position[0] > 39: 
+        player.position[0] = 0
+    if player.position[1] < 0: 
+        player.position[1] = 22
+    if player.position[1] > 22: 
+        player.position[1] = 22
 
     for i in range(len(blockrects)):
         pygame.draw.rect(screen, world.blocks[i][0], blockrects[i])
