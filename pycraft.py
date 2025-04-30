@@ -10,15 +10,18 @@ class World:
         for i in range(25):
             for j in range(40):
                 self.blocks.append([blocks['none'], j, i])
-                self.blocks.append([blocks['stone'], j, i])
+                self.cave_blocks.append([blocks['stone'], j, i])
     
     def save(self, fp='world.pycr'):
         with open(fp, 'w') as save_world:
-            save_world.write(f'{self.blocks}')
+            save_world.write(f'{self.blocks}\n{self.cave_blocks}')
         
     def load(self, fp='world.pycr'):
         with open(fp, 'r') as load_world:
-            self.blocks = eval(f'{load_world.read()}')
+            content = load_world.read().splitlines()
+            print(content[0], content[1])
+            self.blocks = eval(content[0])
+            self.cave_blocks = eval(content[1])
 
 class Player:
     def __init__(self):
@@ -27,7 +30,7 @@ class Player:
         self.position = [0, 0]
         self.health = 5
         self.mining_mode = False
-        self.in_cave = False
+        self.in_cave = True
     
     def switchBlock(self, block):
         self.block_equipped = blocks[block]
@@ -58,11 +61,15 @@ block_planks.connect(gui.CLICK, lambda: player.switchBlock('wood_plank'))
 container.add(block_planks, 700, 590)
 
 blockrects = []
+cave_blockrects = []
 def update_blockrects():
-    global blockrects
+    global blockrects, cave_blockrects
     blockrects = []
+    cave_blockrects = []
     for i in world.blocks:
         blockrects.append(pygame.Rect(i[1]*25, i[2]*25, 25, 25))
+    for i in world.cave_blocks:
+        cave_blockrects.append(pygame.Rect(i[1]*25, i[2]*25, 25, 25))
 
 update_blockrects()
 
@@ -89,6 +96,7 @@ def update_player_rect():
 hud.init(container)
 
 while True:
+    world_blocks = world.blocks if player.in_cave == False else world.cave_blocks
     for event in pygame.event.get():
         hud.event(event)
 
@@ -102,7 +110,7 @@ while True:
                 grid_y = player.position[1]
 
                 if player.inventory[player.block_equipped] >= 1:
-                    for block in world.blocks:
+                    for block in world_blocks:
                         if block[1] == grid_x and block[2] == grid_y:
                             block[0] = player.block_equipped
                             break
@@ -114,7 +122,7 @@ while True:
                 grid_x = player.position[0]+1
                 grid_y = player.position[1]
 
-                for block in world.blocks:
+                for block in world_blocks:
                     if block[1] == grid_x and block[2] == grid_y:
                         player.inventory[block[0]] += 1
                         block[0] = blocks['none']
@@ -136,6 +144,8 @@ while True:
                 give_nm = input('name > ')
                 give_am = int(input('amount > '))
                 player.inventory[blocks[give_nm]] = give_am
+            elif event.key == pygame.K_c:
+                player.in_cave = not player.in_cave
             elif event.key == pygame.K_w:
                 player.position[1] -= 1
                 print('player position:', player.position)
@@ -173,7 +183,11 @@ while True:
         player.position[1] = 22
 
     for i in range(len(blockrects)):
-        pygame.draw.rect(screen, world.blocks[i][0], blockrects[i])
+        if not player.in_cave:
+            pygame.draw.rect(screen, world.blocks[i][0], blockrects[i])
+    for i in range(len(cave_blockrects)):
+        if player.in_cave:
+            pygame.draw.rect(screen, world.cave_blocks[i][0], cave_blockrects[i])
     
     update_player_rect()
     pygame.draw.rect(screen, (255, 255, 255), player_rect)

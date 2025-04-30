@@ -21,3 +21,5 @@ left control | save world
 left alt | load world
 
 0 | enable mining mode
+
+c | toggle cave mode
