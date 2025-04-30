@@ -6,10 +6,11 @@ import random
 class World:
     def __init__(self):
         self.blocks = []
-        cx, cy = 0, 0
+        self.cave_blocks = []
         for i in range(25):
             for j in range(40):
                 self.blocks.append([blocks['none'], j, i])
+                self.blocks.append([blocks['stone'], j, i])
     
     def save(self, fp='world.pycr'):
         with open(fp, 'w') as save_world:
@@ -26,6 +27,7 @@ class Player:
         self.position = [0, 0]
         self.health = 5
         self.mining_mode = False
+        self.in_cave = False
     
     def switchBlock(self, block):
         self.block_equipped = blocks[block]
