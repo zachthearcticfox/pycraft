@@ -124,7 +124,11 @@ while True:
 
                 for block in world_blocks:
                     if block[1] == grid_x and block[2] == grid_y:
-                        player.inventory[block[0]] += 1
+                        if (block[0] == blocks['wood_plank'] or block[0] == blocks['stone']) and random.randint(0, 6) == 1:
+                            player.inventory[block[0]] += 2
+                        else:
+                            player.inventory[block[0]] += 1
+                        print(f'Player now has {player.inventory[block[0]]} block({block[0]})')
                         block[0] = blocks['none']
                         break
 
