@@ -10,7 +10,7 @@ g | give item
 
 right alt | equip block from text input
 
-1-2 | equip block
+1-3 | equip block
 
 \- | give 1 stone
 
@@ -19,3 +19,5 @@ right alt | equip block from text input
 left control | save world
 
 left alt | load world
+
+0 | enable mining mode
