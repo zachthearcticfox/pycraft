@@ -30,7 +30,7 @@ class Player:
         self.position = [0, 0]
         self.health = 5
         self.mining_mode = False
-        self.in_cave = True
+        self.in_cave = False
     
     def switchBlock(self, block):
         self.block_equipped = blocks[block]
