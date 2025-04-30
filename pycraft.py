@@ -1,6 +1,7 @@
 import pygame, sys, random
 import pgu.gui as gui
 from cfg import *
+import random
 
 class World:
     def __init__(self):
@@ -20,10 +21,11 @@ class World:
 
 class Player:
     def __init__(self):
-        self.inventory = {blocks['stone']:16, blocks['grass']:16, blocks['none']:4294967295}
+        self.inventory = {blocks['stone']:16, blocks['grass']:16, blocks['none']:4294967295, blocks['wood_plank']:0}
         self.block_equipped = blocks['grass']
         self.position = [0, 0]
         self.health = 5
+        self.mining_mode = False
     
     def switchBlock(self, block):
         self.block_equipped = blocks[block]
@@ -49,6 +51,10 @@ block_grass = gui.Button("Grass")
 block_grass.connect(gui.CLICK, lambda: player.switchBlock('grass'))
 container.add(block_grass, 825, 590)
 
+block_planks = gui.Button("Wood Planks")
+block_planks.connect(gui.CLICK, lambda: player.switchBlock('wood_plank'))
+container.add(block_planks, 700, 590)
+
 blockrects = []
 def update_blockrects():
     global blockrects
@@ -58,11 +64,19 @@ def update_blockrects():
 
 update_blockrects()
 
+# Grass generation
 for i in range(81):
     if i != 0:
         world.blocks[-i][0] = blocks['grass']
     else: world.blocks[960][0] = blocks['grass']
     update_blockrects()
+
+# Tree generation
+for i in range(40):
+    if random.randint(1,6) == 1:
+        world.blocks[i+880][0] = blocks['wood_plank']
+        world.blocks[i+840][0] = blocks['wood_plank']
+        world.blocks[i+800][0] = blocks['wood_plank']
 
 player_rect = pygame.Rect(player.position[0]*25,player.position[1]*25,25,25)
 
@@ -81,7 +95,7 @@ while True:
             sys.exit()
         
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
+            if event.button == 1 and not player.mining_mode:
                 grid_x = player.position[0]+1
                 grid_y = player.position[1]
 
@@ -94,14 +108,28 @@ while True:
                     print(f'placed block{player.block_equipped} at {grid_x}, {grid_y} ({player.inventory[player.block_equipped]})')
                 else:
                     print(f'player tried to place block at {grid_x}, {grid_y} but only has {player.inventory[player.block_equipped]} block{player.block_equipped}')
+            if event.button == 1 and player.mining_mode:
+                grid_x = player.position[0]+1
+                grid_y = player.position[1]
+
+                for block in world.blocks:
+                    if block[1] == grid_x and block[2] == grid_y:
+                        player.inventory[block[0]] += 1
+                        block[0] = blocks['none']
+                        break
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_1:
                 player.block_equipped = blocks['stone']
             elif event.key == pygame.K_2:
                 player.block_equipped = blocks['grass']
+            elif event.key == pygame.K_3:
+                player.block_equipped = blocks['wood_plank']
             elif event.key == pygame.K_RALT:
                 player.block_equipped = blocks[input('name > ')]
+            elif event.key == pygame.K_0:
+                player.mining_mode = not player.mining_mode
+                print('mining:', player.mining_mode)
             elif event.key == pygame.K_g:
                 give_nm = input('name > ')
                 give_am = int(input('amount > '))
