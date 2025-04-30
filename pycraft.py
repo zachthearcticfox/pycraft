@@ -21,7 +21,7 @@ class World:
 
 class Player:
     def __init__(self):
-        self.inventory = {blocks['stone']:16, blocks['grass']:16, blocks['none']:4294967295, blocks['wood_plank']:0}
+        self.inventory = {blocks['stone']:0, blocks['grass']:16, blocks['none']:4294967295, blocks['wood_plank']:0}
         self.block_equipped = blocks['grass']
         self.position = [0, 0]
         self.health = 5
