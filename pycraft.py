@@ -23,6 +23,10 @@ class Player:
         self.inventory = {blocks['stone']:16, blocks['grass']:16, blocks['none']:4294967295}
         self.block_equipped = blocks['grass']
         self.position = [0, 0]
+        self.health = 5
+    
+    def switchBlock(self, block):
+        self.block_equipped = blocks[block]
 
 pygame.init()
 
@@ -36,6 +40,15 @@ container = gui.Container(width=1000, height=625)
 
 gvlabel = gui.Label("Pycraft v25.4.30.0")
 container.add(gvlabel, 15, 605)
+
+block_stone = gui.Button("Stone")
+block_stone.connect(gui.CLICK, lambda: player.switchBlock('stone'))
+container.add(block_stone, 900, 590)
+
+block_grass = gui.Button("Grass")
+block_grass.connect(gui.CLICK, lambda: player.switchBlock('grass'))
+container.add(block_grass, 825, 590)
+
 
 blockrects = []
 def update_blockrects():
@@ -121,7 +134,6 @@ while True:
 
     clock.tick(60)
     
-    """
     if player.position[0] < 0: 
         player.position[0] = 39
     if player.position[0] > 39: 
@@ -130,7 +142,6 @@ while True:
         player.position[1] = 22
     if player.position[1] > 22: 
         player.position[1] = 22
-    """
 
     for i in range(len(blockrects)):
         pygame.draw.rect(screen, world.blocks[i][0], blockrects[i])
