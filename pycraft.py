@@ -31,14 +31,14 @@ class Player:
 pygame.init()
 
 screen = pygame.display.set_mode((1000,625)) # 40x25 blocks
-pygame.display.set_caption("pycraft v25.4.30.0 (40x25/1000x625)")
+pygame.display.set_caption(f"pycraft v{version} (40x25/1000x625)")
 clock = pygame.time.Clock()
 world = World()
 player = Player()
 hud = gui.App()
 container = gui.Container(width=1000, height=625)
 
-gvlabel = gui.Label("Pycraft v25.4.30.0")
+gvlabel = gui.Label(f"Pycraft v{version}")
 container.add(gvlabel, 15, 605)
 
 block_stone = gui.Button("Stone")
@@ -48,7 +48,6 @@ container.add(block_stone, 900, 590)
 block_grass = gui.Button("Grass")
 block_grass.connect(gui.CLICK, lambda: player.switchBlock('grass'))
 container.add(block_grass, 825, 590)
-
 
 blockrects = []
 def update_blockrects():
