@@ -19,13 +19,12 @@ class World:
     def load(self, fp='world.pycr'):
         with open(fp, 'r') as load_world:
             content = load_world.read().splitlines()
-            print(content[0], content[1])
             self.blocks = eval(content[0])
             self.cave_blocks = eval(content[1])
 
 class Player:
     def __init__(self):
-        self.inventory = {blocks['stone']:0, blocks['grass']:16, blocks['none']:4294967295, blocks['wood_plank']:0}
+        self.inventory = {blocks['stone']:0, blocks['grass']:16, blocks['none']:4294967295, blocks['wood_plank']:0, blocks['coal']:0}
         self.block_equipped = blocks['grass']
         self.position = [0, 0]
         self.health = 5
@@ -60,6 +59,10 @@ block_planks = gui.Button("Wood Planks")
 block_planks.connect(gui.CLICK, lambda: player.switchBlock('wood_plank'))
 container.add(block_planks, 700, 590)
 
+block_coal = gui.Button("Coal")
+block_coal.connect(gui.CLICK, lambda: player.switchBlock('coal'))
+container.add(block_coal, 640, 590)
+
 blockrects = []
 cave_blockrects = []
 def update_blockrects():
@@ -70,6 +73,10 @@ def update_blockrects():
         blockrects.append(pygame.Rect(i[1]*25, i[2]*25, 25, 25))
     for i in world.cave_blocks:
         cave_blockrects.append(pygame.Rect(i[1]*25, i[2]*25, 25, 25))
+
+for i in world.cave_blocks:
+    if random.randint(0, 60) == 1:
+        i[0] = blocks['coal']
 
 update_blockrects()
 
@@ -124,7 +131,7 @@ while True:
 
                 for block in world_blocks:
                     if block[1] == grid_x and block[2] == grid_y:
-                        if (block[0] == blocks['wood_plank'] or block[0] == blocks['stone']) and random.randint(0, 6) == 1:
+                        if random.randint(0, 6) == 1:
                             player.inventory[block[0]] += 2
                         else:
                             player.inventory[block[0]] += 1
@@ -139,6 +146,8 @@ while True:
                 player.block_equipped = blocks['grass']
             elif event.key == pygame.K_3:
                 player.block_equipped = blocks['wood_plank']
+            elif event.key == pygame.K_4:
+                player.block_equipped = blocks['coal']
             elif event.key == pygame.K_RALT:
                 player.block_equipped = blocks[input('name > ')]
             elif event.key == pygame.K_0:
@@ -182,9 +191,11 @@ while True:
     if player.position[0] > 39: 
         player.position[0] = 0
     if player.position[1] < 0: 
+        player.position[1] = 24
+    if player.position[1] > 22 and not player.in_cave: 
         player.position[1] = 22
-    if player.position[1] > 22: 
-        player.position[1] = 22
+    if player.in_cave and player.position[1] > 24:
+        player.position[1] = 24
 
     for i in range(len(blockrects)):
         if not player.in_cave:
