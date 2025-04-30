@@ -1,4 +1,5 @@
 import pygame, sys, random
+import pgu.gui as gui
 from cfg import *
 
 class World:
@@ -26,10 +27,15 @@ class Player:
 pygame.init()
 
 screen = pygame.display.set_mode((1000,625)) # 40x25 blocks
-pygame.display.set_caption("pycraft v25.4.29.0 (40x25/1000x625)")
+pygame.display.set_caption("pycraft v25.4.30.0 (40x25/1000x625)")
 clock = pygame.time.Clock()
 world = World()
 player = Player()
+hud = gui.App()
+container = gui.Container(width=1000, height=625)
+
+gvlabel = gui.Label("Pycraft v25.4.30.0")
+container.add(gvlabel, 15, 605)
 
 blockrects = []
 def update_blockrects():
@@ -52,8 +58,12 @@ def update_player_rect():
     global player_rect
     player_rect = pygame.Rect(player.position[0]*25,player.position[1]*25,25,25)
 
+hud.init(container)
+
 while True:
     for event in pygame.event.get():
+        hud.event(event)
+
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
@@ -111,6 +121,7 @@ while True:
 
     clock.tick(60)
     
+    """
     if player.position[0] < 0: 
         player.position[0] = 39
     if player.position[0] > 39: 
@@ -119,11 +130,14 @@ while True:
         player.position[1] = 22
     if player.position[1] > 22: 
         player.position[1] = 22
+    """
 
     for i in range(len(blockrects)):
         pygame.draw.rect(screen, world.blocks[i][0], blockrects[i])
     
     update_player_rect()
     pygame.draw.rect(screen, (255, 255, 255), player_rect)
+
+    hud.paint(screen)
 
     pygame.display.flip()
